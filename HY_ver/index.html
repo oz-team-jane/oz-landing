@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행AI - 흩어진 정보를 완벽한 여행 계획으로</title>
+    <meta name="description" content="항공권과 호텔 예약 정보만 붙여넣으세요. AI가 즉시 지도 위에 동선이 그려진 완벽한 여행 일정표를 만들어드립니다.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .cta-button {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .button-primary {
+            background: white;
+            color: #2563eb;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-primary:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-secondary {
+            background: transparent;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .button-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* MVP Demo Section */
+        .mvp-demo {
+            padding: 5rem 0;
+            background: #f8fafc;
+        }
+
+        .demo-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .demo-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+        }
+
+        .demo-text p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #64748b;
+        }
+
+        .demo-visual {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-box {
+            width: 100%;
+            min-height: 200px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .input-box::placeholder {
+            color: #94a3b8;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 2rem;
+            color: #2563eb;
+            margin: 1rem 0;
+        }
+
+        .result-preview {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid #2563eb;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1e293b;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: #2563eb;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Target Customers */
+        .target-customers {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .target-customers h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .customers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .customer-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .customer-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .customer-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 5rem 0;
+            background: #f8fafc;
+        }
+
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1e293b;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .pricing-card.popular {
+            border-color: #2563eb;
+            transform: scale(1.05);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: #64748b;
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e293b;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #f1f5f9;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .footer-section a:hover {
+            color: #2563eb;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #334155;
+            padding-top: 1rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .demo-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .button-primary, .button-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .pricing-card.popular {
+                transform: none;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">여행AI</div>
+            <ul class="nav-links">
+                <li><a href="#features">기능</a></li>
+                <li><a href="#how-it-works">사용방법</a></li>
+                <li><a href="#pricing">가격</a></li>
+            </ul>
+            <a href="#get-started" class="cta-button">무료로 시작하기</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>흩어진 정보만 던져주세요<br>완벽한 여행 계획을 만들어드립니다</h1>
+            <p>항공권과 호텔 예약 내역만 붙여넣으면, AI가 즉시 지도 위에 동선이 그려진 최적의 여행 일정표를 생성합니다.<br>복잡한 계획과 정리는 이제 그만, AI가 모든 것을 처리합니다.</p>
+            <div class="hero-buttons">
+                <a href="#demo" class="button-primary">무료로 체험하기</a>
+                <a href="#how-it-works" class="button-secondary">어떻게 작동하나요?</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MVP Demo Section -->
+    <section id="demo" class="mvp-demo">
+        <div class="container">
+            <div class="demo-content">
+                <div class="demo-text fade-in">
+                    <h2>단 몇 초 만에<br>완벽한 여행 계획</h2>
+                    <p>복잡한 입력 폼은 필요 없습니다. 하나의 큰 텍스트 박스에 항공권과 호텔 예약 내역을 붙여넣기만 하면 됩니다.</p>
+                    <p>AI가 자동으로 장소와 날짜를 추출하여 지도 위에 최적의 동선으로 표시해드립니다.</p>
+                </div>
+                <div class="demo-visual fade-in">
+                    <textarea class="input-box" placeholder="여기에 항공권과 호텔 예약 내역을 붙여넣으세요...
+
+예시:
+✈️ 인천국제공항 → 도쿄 나리타공항
+출발: 2024년 3월 15일 09:00
+도착: 2024년 3월 15일 12:30
+
+🏨 도쿄 그랜드 호텔
+체크인: 2024년 3월 15일
+체크아웃: 2024년 3월 18일
+
+✈️ 도쿄 나리타공항 → 인천국제공항  
+출발: 2024년 3월 18일 14:00"></textarea>
+                    
+                    <div class="arrow-down">⬇️</div>
+                    
+                    <div class="result-preview">
+                        <strong>🗺️ AI가 생성한 여행 계획</strong><br>
+                        📍 3월 15일: 나리타공항 → 도쿄역 → 호텔 체크인<br>
+                        📍 3월 16일: 아사쿠사 → 우에노 → 시부야<br>
+                        📍 3월 17일: 하라주쿠 → 메이지신궁 → 긴자<br>
+                        📍 3월 18일: 호텔 → 나리타공항 출발
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="fade-in">왜 여행AI를 선택해야 할까요?</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI 기반 자동 분석</h3>
+                    <p>복잡한 예약 내역에서 핵심 정보만 자동으로 추출하여 최적의 동선을 계산합니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">⚡</div>
+                    <h3>즉시 결과 생성</h3>
+                    <p>텍스트를 붙여넣는 순간 바로 지도 위에 완성된 여행 일정이 표시됩니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🎯</div>
+                    <h3>간단한 사용법</h3>
+                    <p>복잡한 입력 폼 없이 하나의 텍스트 박스만으로 모든 것이 해결됩니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>시각적 지도 표시</h3>
+                    <p>지도 위에 동선이 그려진 직관적인 여행 계획을 확인할 수 있습니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔄</div>
+                    <h3>실시간 수정</h3>
+                    <p>생성된 계획을 실시간으로 수정하고 최적화할 수 있습니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📱</div>
+                    <h3>모바일 최적화</h3>
+                    <p>언제 어디서나 스마트폰으로 쉽게 여행 계획을 관리할 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Customers -->
+    <section class="target-customers">
+        <div class="container">
+            <h2 class="fade-in">이런 분들에게 완벽합니다</h2>
+            <div class="customers-grid">
+                <div class="customer-card fade-in">
+                    <div class="customer-emoji">✈️</div>
+                    <h3>여행 초보자</h3>
+                    <p>여행 계획 세우는 게 어렵고 복잡해서 망설이는 분</p>
+                </div>
+                <div class="customer-card fade-in">
+                    <div class="customer-emoji">⏰</div>
+                    <h3>바쁜 직장인</h3>
+                    <p>시간은 없지만 효율적인 여행을 원하는 20-40대</p>
+                </div>
+                <div class="customer-card fade-in">
+                    <div class="customer-emoji">📊</div>
+                    <h3>계획형 여행자</h3>
+                    <p>체계적이고 완벽한 여행 일정을 선호하는 분</p>
+                </div>
+                <div class="customer-card fade-in">
+                    <div class="customer-emoji">💰</div>
+                    <h3>재테크 관심자</h3>
+                    <p>정보 정리와 계획 수립에 도구가 필요한 분</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="fade-in">합리적인 가격으로 시작하세요</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card fade-in">
+                    <h3>무료 플랜</h3>
+                    <div class="price">₩0</div>
+                    <ul class="pricing-features">
+                        <li>기본 1개 여행 계획 생성</li>
+                        <li>지도 위 동선 표시</li>
+                        <li>기본 일정 추천</li>
+                        <li>커뮤니티 지원</li>
+                    </ul>
+                    <a href="#get-started" class="cta-button">무료로 시작하기</a>
+                </div>
+                <div class="pricing-card popular fade-in">
+                    <div class="popular-badge">가장 인기</div>
+                    <h3>프리미엄 플랜</h3>
+                    <div class="price">₩9,900<small>/월</small></div>
+                    <ul class="pricing-features">
+                        <li>무제한 여행 계획 생성</li>
+                        <li>실시간 계획 수정</li>
+                        <li>고급 최적화 알고리즘</li>
+                        <li>계획 공유 및 협업</li>
+                        <li>우선 고객 지원</li>
+                        <li>PDF 다운로드</li>
+                    </ul>
+                    <a href="#get-started" class="cta-button">프리미엄 시작하기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>여행AI</h3>
+                    <p>흩어진 정보를 완벽한 여행 계획으로 만드는 AI 서비스입니다.</p>
+                    <p>복잡한 계획과 정리는 이제 AI에게 맡기세요.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>서비스</h3>
+                    <a href="#features">주요 기능</a>
+                    <a href="#pricing">요금제</a>
+                    <a href="#">API 문서</a>
+                    <a href="#">도움말</a>
+                </div>
+                <div class="footer-section">
+                    <h3>회사</h3>
+                    <a href="#">소개</a>
+                    <a href="#">블로그</a>
+                    <a href="#">채용</a>
+                    <a href="#">언론 보도</a>
+                </div>
+                <div class="footer-section">
+                    <h3>지원</h3>
+                    <a href="#">고객센터</a>
+                    <a href="#">이용약관</a>
+                    <a href="#">개인정보처리방침</a>
+                    <a href="#">문의하기</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 여행AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Demo input interaction
+        const inputBox = document.querySelector('.input-box');
+        if (inputBox) {
+            inputBox.addEventListener('input', function() {
+                const resultPreview = document.querySelector('.result-preview');
+                if (this.value.trim()) {
+                    resultPreview.style.opacity = '1';
+                    resultPreview.style.transform = 'translateY(0)';
+                } else {
+                    resultPreview.style.opacity = '0.5';
+                    resultPreview.style.transform = 'translateY(10px)';
+                }
+            });
+        }
+
+        // Mobile menu toggle (basic implementation)
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        }
+    </script>
+</body>
+</html>
