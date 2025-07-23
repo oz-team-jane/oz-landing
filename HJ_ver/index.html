@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripAI - 흩어진 정보를 완벽한 여행으로</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-600: #6366f1;
+            --primary-700: #4f46e5;
+            --primary-800: #3730a3;
+            --secondary-500: #06b6d4;
+            --secondary-600: #0891b2;
+            --accent-500: #f59e0b;
+            --accent-600: #d97706;
+            --success-500: #10b981;
+            --success-600: #059669;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--gray-900);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glass Morphism Header */
+        .header {
+            padding: 32px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 0 0 50px 50px;
+            z-index: -1;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)); }
+            100% { filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6)); }
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Premium Main Content with Glass Morphism */
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 32px;
+            box-shadow: 
+                var(--shadow-2xl),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            margin: 40px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        }
+
+        /* Premium Hero Section */
+        .hero-section {
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--primary-700) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-600);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Premium Input Section */
+        .input-section {
+            padding: 60px 40px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            position: relative;
+        }
+
+        .input-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40px;
+            right: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gray-200), transparent);
+        }
+
+        .input-label {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--gray-900);
+            display: block;
+            text-align: center;
+        }
+
+        .input-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .input-textarea {
+            width: 100%;
+            min-height: 240px;
+            padding: 32px;
+            border: 2px solid var(--gray-200);
+            border-radius: 24px;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            font-weight: 400;
+        }
+
+        .input-textarea:focus {
+            outline: none;
+            border-color: var(--primary-600);
+            box-shadow: 
+                var(--shadow-lg),
+                0 0 0 4px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-textarea::placeholder {
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 20px 32px;
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 16px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                var(--shadow-xl),
+                0 0 30px rgba(99, 102, 241, 0.4);
+            background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .generate-btn:disabled:hover {
+            transform: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Premium Loading Animation */
+        .loading-section {
+            display: none;
+            padding: 80px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+        }
+
+        .loading-animation {
+            position: relative;
+            margin: 0 auto 32px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-dots {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 4px;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-600);
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .loading-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 12px;
+        }
+
+        .loading-subtext {
+            font-size: 1rem;
+            color: var(--gray-500);
+        }
+
+        /* Premium Result Section */
+        .result-section {
+            display: none;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .result-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+        }
+
+        .result-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            margin-bottom: 32px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn, .download-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .download-btn {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .share-btn:hover, .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 48px;
+            margin-top: 48px;
+        }
+
+        /* Premium Map Container */
+        .map-container {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border-radius: 24px;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mock-map {
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, #4fc3f7 0%, #29b6f6 50%, #03a9f4 100%),
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+            position: relative;
+        }
+
+        .map-pin {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border: 3px solid var(--white);
+            border-radius: 50%;
+            box-shadow: var(--shadow-lg);
+            animation: pinBounce 2s ease-in-out infinite;
+        }
+
+        .pin-1 { top: 20%; left: 30%; animation-delay: 0s; }
+        .pin-2 { top: 40%; left: 60%; animation-delay: 0.5s; }
+        .pin-3 { top: 70%; left: 45%; animation-delay: 1s; }
+
+        @keyframes pinBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.1); }
+        }
+
+        .map-route {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Premium Itinerary */
+        .itinerary-container {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-100);
+        }
+
+        .itinerary-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .itinerary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .day-item {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--gray-100);
+            position: relative;
+        }
+
+        .day-item:last-child {
+            border-bottom: none;
+        }
+
+        .day-item::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--secondary-500) 100%);
+            border-radius: 2px;
+        }
+
+        .day-date {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--primary-600);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .day-activities {
+            color: var(--gray-700);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Premium Features Section */
+        .features-section {
+            padding: 80px 40px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            position: relative;
+        }
+
+        .features-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40px;
+            right: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gray-200), transparent);
+        }
+
+        .features-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+
+        .features-subtitle {
+            text-align: center;
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            margin-bottom: 64px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 40px 32px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-100);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--secondary-500) 100%);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+
+        .feature-desc {
+            color: var(--gray-600);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* Premium Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            padding: 80px 0 40px;
+        }
+
+        .footer-section h4.footer-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--white);
+        }
+
+        .footer-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary-400) 0%, var(--secondary-400) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-desc {
+            color: var(--gray-300);
+            margin-bottom: 24px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1.25rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-link:hover {
+            background: var(--primary-600);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 400;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-400);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 32px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-legal {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-legal a {
+            color: var(--gray-300);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--primary-400);
+        }
+
+        .divider {
+            color: var(--gray-500);
+        }
+
+        .footer-copyright {
+            color: var(--gray-400);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .result-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .input-section, .features-section {
+                padding: 48px 24px;
+            }
+
+            .result-section {
+                padding: 48px 24px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                text-align: center;
+                padding: 48px 0 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .footer-legal {
+                justify-content: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .share-btn, .download-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .input-textarea {
+                padding: 24px;
+                min-height: 200px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+        <!-- Premium Header -->
+        <div class="header">
+            <div class="logo">🌍 TripAI</div>
+            <div class="tagline">AI가 만드는 완벽한 여행, 5초면 충분합니다</div>
+        </div>
+
+        <!-- Premium Main Content -->
+        <div class="main-content">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1 class="hero-title">복잡한 여행 계획은<br>이제 과거의 일입니다</h1>
+                <p class="hero-subtitle">
+                    항공권과 호텔 예약 내역만 붙여넣으세요.<br>
+                    AI가 최적의 동선과 완벽한 일정을 즉시 생성해드립니다.
+                </p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">완성된 여행 계획</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5초</span>
+                        <span class="stat-label">평균 생성 시간</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">만족도</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Input Section -->
+            <div class="input-section">
+                <label class="input-label">✨ 여행 정보를 입력해주세요</label>
+                <div class="input-container">
+                    <textarea 
+                        class="input-textarea" 
+                        id="travelInput"
+                        placeholder="예시:
+
+📧 항공권 예약 확인
+KE123 인천(ICN) → 파리(CDG)
+2024년 8월 15일 10:30 출발
+
+🏨 숙박 예약
+르 마레 호텔, 파리
+체크인: 8월 15일 15:00
+체크아웃: 8월 18일 11:00
+
+✈️ 내부 항공편  
+파리 → 로마 8월 18일 14:20
+AF1204편
+
+🏨 로마 숙박
+Hotel Roma, 8월 18-20일
+
+항공권, 호텔, 렌터카 등 어떤 형식이든 자유롭게 붙여넣으세요!
+AI가 알아서 정리해드립니다."></textarea>
+                    <button class="generate-btn" onclick="generatePlan()">
+                        ✨ AI가 완벽한 여행 계획 만들기
+                    </button>
+                </div>
+            </div>
+
+            <!-- Premium Loading Section -->
+            <div class="loading-section" id="loadingSection">
+                <div class="loading-animation">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-dots">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                </div>
+                <div class="loading-text">AI가 여행 정보를 분석하고 있습니다</div>
+                <div class="loading-subtext">최적의 동선과 일정을 생성 중...</div>
+            </div>
+
+            <!-- Premium Result Section -->
+            <div class="result-section" id="resultSection">
+                <div class="result-header">
+                    <h2 class="result-title">🎉 완벽한 여행 계획이 완성되었습니다!</h2>
+                    <p class="result-subtitle">AI가 분석한 최적의 동선과 일정을 확인해보세요</p>
+                    
+                    <div class="action-buttons">
+                        <button class="share-btn" onclick="shareResult()">
+                            <span>📤</span> 친구에게 공유하기
+                        </button>
+                        <button class="download-btn" onclick="downloadPlan()">
+                            <span>📄</span> PDF로 다운로드
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="result-content">
+                    <div class="map-container">
+                        <div class="mock-map">
+                            <div class="map-pin pin-1"></div>
+                            <div class="map-pin pin-2"></div>
+                            <div class="map-pin pin-3"></div>
+                            <svg class="map-route" viewBox="0 0 100 100">
+                                <path d="M30,20 Q45,30 60,40 Q52,55 45,70" 
+                                      stroke="#6366f1" 
+                                      stroke-width="3" 
+                                      fill="none" 
+                                      stroke-dasharray="8,4"
+                                      opacity="0.8">
+                                    <animate attributeName="stroke-dashoffset" 
+                                             values="0;-12" 
+                                             dur="2s" 
+                                             repeatCount="indefinite"/>
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-container">
+                        <div class="itinerary-header">
+                            <h3 class="itinerary-title">📅 상세 여행 일정</h3>
+                        </div>
+                        
+                        <div class="day-item">
+                            <div class="day-date">
+                                <span>📅</span> 8월 15일 (목) - 파리 도착
+                            </div>
+                            <div class="day-activities">
+                                • 10:30 인천공항 출발 (KE123)<br>
+                                • 15:00 르 마레 호텔 체크인<br>
+                                • 17:30 에펠탑 & 트로카데로 광장<br>
+                                • 20:00 센강 디너 크루즈
+                            </div>
+                        </div>
+                        
+                        <div class="day-item">
+                            <div class="day-date">
+                                <span>🗼</span> 8월 16일 (금) - 파리 시내 관광
+                            </div>
+                            <div class="day-activities">
+                                • 09:00 루브르 박물관 (사전 예약 추천)<br>
+                                • 14:00 샹젤리제 거리 & 개선문<br>
+                                • 17:00 몽마르트 언덕 & 사크레 쾨르<br>
+                                • 19:30 현지 비스트로 저녁 식사
+                            </div>
+                        </div>
+                        
+                        <div class="day-item">
+                            <div class="day-date">
+                                <span>🏛️</span> 8월 17일 (토) - 파리 마지막 날
+                            </div>
+                            <div class="day-activities">
+                                • 10:00 베르사유 궁전 (당일 투어)<br>
+                                • 15:00 생 제르맹 데 프레 지구<br>
+                                • 18:00 마레 지구 & 유대인 거리<br>
+                                • 20:30 파리 야경 투어
+                            </div>
+                        </div>
+                        
+                        <div class="day-item">
+                            <div class="day-date">
+                                <span>✈️</span> 8월 18일 (일) - 로마로 이동
+                            </div>
+                            <div class="day-activities">
+                                • 11:00 호텔 체크아웃<br>
+                                • 14:20 파리 → 로마 이동 (AF1204)<br>
+                                • 17:00 Hotel Roma 체크인<br>
+                                • 19:00 콜로세움 석양 투어
+                            </div>
+                        </div>
+                        
+                        <div class="day-item">
+                            <div class="day-date">
+                                <span>🏛️</span> 8월 19일 (월) - 로마 관광
+                            </div>
+                            <div class="day-activities">
+                                • 09:00 바티칸 시국 & 시스티나 성당<br>
+                                • 14:00 판테온 & 나보나 광장<br>
+                                • 17:00 트레비 분수 & 스페인 계단<br>
+                                • 19:30 테베레 강변 저녁 산책
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Features Section -->
+            <div class="features-section">
+                <h2 class="features-title">왜 수만 명이 TripAI를 선택했을까요?</h2>
+                <p class="features-subtitle">복잡했던 여행 계획이 이제는 5초면 충분합니다</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <h3 class="feature-title">초고속 5초 생성</h3>
+                        <p class="feature-desc">복잡한 입력 폼 없이 예약 정보만 붙여넣으면 AI가 즉시 완벽한 계획을 생성합니다</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">🎯</span>
+                        <h3 class="feature-title">최적화된 스마트 동선</h3>
+                        <p class="feature-desc">거리, 시간, 교통편을 종합 분석해 가장 효율적인 여행 동선을 자동으로 계산합니다</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">🧠</span>
+                        <h3 class="feature-title">AI 맞춤형 추천</h3>
+                        <p class="feature-desc">현지 맛집, 숨은 명소, 최적의 이동 시간까지 AI가 개인화된 추천을 제공합니다</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">📱</span>
+                        <h3 class="feature-title">간편한 공유 & 협업</h3>
+                        <p class="feature-desc">완성된 계획을 친구들과 바로 공유하고 실시간으로 함께 수정할 수 있습니다</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">🌍</span>
+                        <h3 class="feature-title">전 세계 200+ 도시 지원</h3>
+                        <p class="feature-desc">파리부터 도쿄까지, 전 세계 주요 여행지의 최신 정보를 실시간으로 반영합니다</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">💎</span>
+                        <h3 class="feature-title">프리미엄 여행 경험</h3>
+                        <p class="feature-desc">단순한 일정표가 아닌, 현지인만 아는 특별한 경험까지 포함된 완벽한 여행을 설계합니다</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">🌍 TripAI</div>
+                    <p class="footer-desc">
+                        AI 기반 스마트 여행 계획 서비스<br>
+                        여행의 새로운 패러다임을 제시합니다
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">📺</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">서비스</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">AI 여행 계획</a></li>
+                        <li><a href="#">프리미엄 플랜</a></li>
+                        <li><a href="#">기업용 솔루션</a></li>
+                        <li><a href="#">API 서비스</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">고객지원</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">자주 묻는 질문</a></li>
+                        <li><a href="#">사용 가이드</a></li>
+                        <li><a href="#">실시간 채팅</a></li>
+                        <li><a href="#">피드백 보내기</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">회사</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">회사 소개</a></li>
+                        <li><a href="#">채용 정보</a></li>
+                        <li><a href="#">언론 보도</a></li>
+                        <li><a href="#">개발자 블로그</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <a href="#">이용약관</a>
+                    <span class="divider">|</span>
+                    <a href="#">개인정보처리방침</a>
+                    <span class="divider">|</span>
+                    <a href="#">위치기반서비스약관</a>
+                    <span class="divider">|</span>
+                    <a href="#">청소년보호정책</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2024 TripAI Inc. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced interaction logic
+        function generatePlan() {
+            const input = document.getElementById('travelInput').value.trim();
+            
+            if (!input) {
+                alert('✈️ 여행 정보를 입력해주세요!');
+                return;
+            }
+
+            // Add loading state to button
+            const btn = document.querySelector('.generate-btn');
+            btn.style.background = 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)';
+            btn.disabled = true;
+            btn.innerHTML = '🔄 AI가 분석 중...';
+
+            // Hide sections with smooth transition
+            const inputSection = document.querySelector('.input-section');
+            const featuresSection = document.querySelector('.features-section');
+            const loadingSection = document.getElementById('loadingSection');
+            
+            inputSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            featuresSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            
+            inputSection.style.opacity = '0';
+            inputSection.style.transform = 'translateY(-20px)';
+            featuresSection.style.opacity = '0';
+            featuresSection.style.transform = 'translateY(-20px)';
+
+            setTimeout(() => {
+                inputSection.style.display = 'none';
+                featuresSection.style.display = 'none';
+                loadingSection.style.display = 'block';
+                loadingSection.style.opacity = '0';
+                loadingSection.style.transform = 'translateY(20px)';
+                
+                requestAnimationFrame(() => {
+                    loadingSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    loadingSection.style.opacity = '1';
+                    loadingSection.style.transform = 'translateY(0)';
+                });
+            }, 500);
+
+            // Simulate AI processing with realistic timing
+            setTimeout(() => {
+                loadingSection.style.opacity = '0';
+                loadingSection.style.transform = 'translateY(-20px)';
+                
+                setTimeout(() => {
+                    loadingSection.style.display = 'none';
+                    const resultSection = document.getElementById('resultSection');
+                    resultSection.style.display = 'block';
+                    resultSection.style.opacity = '0';
+                    resultSection.style.transform = 'translateY(20px)';
+                    
+                    requestAnimationFrame(() => {
+                        resultSection.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                        resultSection.style.opacity = '1';
+                        resultSection.style.transform = 'translateY(0)';
+                    });
+                    
+                    // Smooth scroll to result
+                    setTimeout(() => {
+                        resultSection.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 400);
+                }, 500);
+            }, 3500);
+        }
+
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '🌍 TripAI로 만든 완벽한 여행 계획',
+                    text: '5초만에 완성된 AI 맞춤형 여행 계획을 확인해보세요! ✈️',
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                const message = '🌍 TripAI로 만든 완벽한 여행 계획을 확인해보세요!\n✨ 5초만에 완성되는 AI 맞춤형 일정\n\n' + window.location.href;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(message).then(() => {
+                        showNotification('📋 공유 링크가 클립보드에 복사되었습니다!');
+                    });
+                } else {
+                    showNotification('📱 브라우저에서 공유 기능을 지원하지 않습니다.');
+                }
+            }
+        }
+
+        function downloadPlan() {
+            showNotification('📄 PDF 다운로드 기능이 곧 추가됩니다!');
+        }
+
+        function showNotification(message) {
+            // Create a simple notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                transform: translateX(100%);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            requestAnimationFrame(() => {
+                notification.style.transform = 'translateX(0)';
+            });
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Enhanced textarea interactions
+        document.getElementById('travelInput').addEventListener('input', function() {
+            const btn = document.querySelector('.generate-btn');
+            const value = this.value.trim();
+            
+            if (value) {
+                btn.style.background = 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)';
+                btn.disabled = false;
+                btn.innerHTML = '✨ AI가 완벽한 여행 계획 만들기';
+                
+                // Add subtle glow effect when typing
+                this.style.boxShadow = `
+                    var(--shadow-lg),
+                    0 0 0 4px rgba(99, 102, 241, 0.1),
+                    0 0 20px rgba(99, 102, 241, 0.1)
+                `;
+            } else {
+                btn.style.background = 'linear-gradient(135deg, var(--gray-400) 0%, var(--gray-500) 100%)';
+                btn.disabled = true;
+                btn.innerHTML = '정보를 입력해주세요';
+                this.style.boxShadow = 'var(--shadow-sm)';
+            }
+        });
+
+        // Initialize with proper state
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.querySelector('.generate-btn');
+            btn.style.background = 'linear-gradient(135deg, var(--gray-400) 0%, var(--gray-500) 100%)';
+            btn.disabled = true;
+            btn.innerHTML = '정보를 입력해주세요';
+
+            // Add some entrance animations
+            const elements = document.querySelectorAll('.feature-card, .stat-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            elements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Add scroll-based animations
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.bg-animation');
+            const speed = scrolled * 0.2;
+            
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+    </script>
+</body>
+</html>
