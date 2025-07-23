@@ -1179,66 +1179,9 @@ AI가 알아서 정리해드립니다."></textarea>
                 return;
             }
 
-            // Add loading state to button
-            const btn = document.querySelector('.generate-btn');
-            btn.style.background = 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)';
-            btn.disabled = true;
-            btn.innerHTML = '🔄 AI가 분석 중...';
-
-            // Hide sections with smooth transition
-            const inputSection = document.querySelector('.input-section');
-            const featuresSection = document.querySelector('.features-section');
-            const loadingSection = document.getElementById('loadingSection');
-            
-            inputSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            featuresSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            
-            inputSection.style.opacity = '0';
-            inputSection.style.transform = 'translateY(-20px)';
-            featuresSection.style.opacity = '0';
-            featuresSection.style.transform = 'translateY(-20px)';
-
-            setTimeout(() => {
-                inputSection.style.display = 'none';
-                featuresSection.style.display = 'none';
-                loadingSection.style.display = 'block';
-                loadingSection.style.opacity = '0';
-                loadingSection.style.transform = 'translateY(20px)';
-                
-                requestAnimationFrame(() => {
-                    loadingSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    loadingSection.style.opacity = '1';
-                    loadingSection.style.transform = 'translateY(0)';
-                });
-            }, 500);
-
-            // Simulate AI processing with realistic timing
-            setTimeout(() => {
-                loadingSection.style.opacity = '0';
-                loadingSection.style.transform = 'translateY(-20px)';
-                
-                setTimeout(() => {
-                    loadingSection.style.display = 'none';
-                    const resultSection = document.getElementById('resultSection');
-                    resultSection.style.display = 'block';
-                    resultSection.style.opacity = '0';
-                    resultSection.style.transform = 'translateY(20px)';
-                    
-                    requestAnimationFrame(() => {
-                        resultSection.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                        resultSection.style.opacity = '1';
-                        resultSection.style.transform = 'translateY(0)';
-                    });
-                    
-                    // Smooth scroll to result
-                    setTimeout(() => {
-                        resultSection.scrollIntoView({ 
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }, 400);
-                }, 500);
-            }, 3500);
+            // 입력된 여행 정보를 URL 파라미터로 전달하여 YH_ver 페이지로 이동
+            const travelData = encodeURIComponent(input);
+            window.location.href = `../YH_ver/index.html?data=${travelData}`;
         }
 
         function shareResult() {

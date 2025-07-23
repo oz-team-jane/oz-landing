@@ -362,8 +362,25 @@ function downloadItinerary() {
   );
 }
 
-// 페이지 로드 시 지도 초기화
+// 페이지 로드 시 URL 파라미터 확인 및 자동 실행
 document.addEventListener("DOMContentLoaded", function () {
+  // URL 파라미터에서 여행 데이터 확인
+  const urlParams = new URLSearchParams(window.location.search);
+  const travelData = urlParams.get('data');
+  
+  if (travelData) {
+    // 전달받은 데이터를 textarea에 입력
+    const travelInput = document.getElementById('travelInput');
+    if (travelInput) {
+      travelInput.value = decodeURIComponent(travelData);
+      
+      // 1초 후에 자동으로 여행 계획 생성 실행
+      setTimeout(() => {
+        generatePlan();
+      }, 1000);
+    }
+  }
+  
   // 초기 지도는 생성하지 않고 필요할 때만 생성
 });
 
