@@ -12,21 +12,14 @@ body {
   flex-direction: column;
 }
 .main-header {
-  text-align: center;
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #222;
-  margin-top: 48px;
-  margin-bottom: 0;
-  padding: 0;
-  font-family: "Montserrat", "Pretendard", "Noto Sans KR", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  /* font-size, font-weight, gap 등 텍스트 관련 속성은 삭제해도 무방 */
 }
 .main-title-accent {
-  color: #0077ff;
-  font-family: "Montserrat", "Pretendard", "Noto Sans KR", sans-serif;
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  color: inherit; /* 색상 효과 제거 */
 }
 .main-subtitle {
   font-size: 1.13rem;
@@ -107,4 +100,10 @@ a.card {
   font-weight: bold;
   margin: 16px 0 12px 0;
   color: #111; /* 제목도 검은색 */
+}
+.main-logo {
+  height: 200px; /* 더 크게 강조 (원하는 크기로 조정) */
+  width: auto;
+  margin: 0;
+  vertical-align: middle;
 }
