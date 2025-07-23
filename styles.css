@@ -130,3 +130,13 @@ a.card {
   margin: 0;
   vertical-align: middle;
 }
+.presentation-btn {
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+.presentation-btn:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+  background: #0077ff;
+  color: #fff;
+}
