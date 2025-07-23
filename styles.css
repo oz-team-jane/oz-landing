@@ -15,9 +15,32 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 40px;
-  /* font-size, font-weight, gap 등 텍스트 관련 속성은 삭제해도 무방 */
+  margin-top: 16px;
+  position: relative;
 }
+
+.main-nav {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 18px;
+}
+
+.main-nav a {
+  color: #0077ff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.08rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.main-nav a:hover {
+  background: #e6f0ff;
+}
+
 .main-title-accent {
   color: inherit; /* 색상 효과 제거 */
 }
@@ -37,7 +60,7 @@ body {
   text-align: center;
   font-size: 1.08rem;
   color: #444;
-  margin-bottom: 8px;
+  margin-bottom: 4px; /* 기존 8px → 4px로 줄임 */
   letter-spacing: 0.01em;
 }
 .team-name {
@@ -48,7 +71,7 @@ body {
   text-align: center;
   font-size: 1.08rem;
   color: #333;
-  margin-bottom: 32px;
+  margin-bottom: 16px; /* 기존 32px → 16px로 줄임 */
   line-height: 1.7;
 }
 .summary-highlight {
@@ -102,7 +125,7 @@ a.card {
   color: #111; /* 제목도 검은색 */
 }
 .main-logo {
-  height: 200px; /* 더 크게 강조 (원하는 크기로 조정) */
+  height: 160px; /* 더 크게 강조 (원하는 크기로 조정) */
   width: auto;
   margin: 0;
   vertical-align: middle;
