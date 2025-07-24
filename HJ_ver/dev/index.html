@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneTrip - 모든 여행을 하나로, 완벽하게</title>
+    <style>
+        /* --- 기본 & 폰트 설정 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        :root {
+            /* Sky Blue Theme Colors */
+            --primary-color: #0EA5E9; /* Sky 500 */
+            --primary-light: #38BDF8; /* Sky 400 */
+            --primary-lighter: #7DD3FC; /* Sky 300 */
+            --primary-lightest: #BAE6FD; /* Sky 200 */
+            --primary-dark: #0284C7; /* Sky 600 */
+            --primary-darker: #0369A1; /* Sky 700 */
+            
+            --accent-color: #F59E0B; /* Amber 500 - for CTAs */
+            --accent-hover: #D97706; /* Amber 600 */
+            
+            --text-dark: #0F172A; /* Slate 900 */
+            --text-normal: #334155; /* Slate 700 */
+            --text-light: #64748B; /* Slate 500 */
+            --text-lighter: #94A3B8; /* Slate 400 */
+            
+            --bg-white: #FFFFFF;
+            --bg-light: #F0F9FF; /* Sky 50 */
+            --bg-lighter: #E0F2FE; /* Sky 100 */
+            --border-color: #E2E8F0; /* Slate 200 */
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: var(--text-normal);
+            line-height: 1.6;
+            background-color: var(--bg-white);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- 헤더 --- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-md);
+            border-bottom-color: var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+        }
+
+        .logo {
+            font-size: 1.875rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-normal);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 0.75rem 1.75rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-md);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* --- 히어로 섹션 --- */
+        .hero {
+            padding-top: 8rem;
+            padding-bottom: 6rem;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-lighter) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -25%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, var(--primary-lightest) 0%, transparent 70%);
+            opacity: 0.5;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text h1 .highlight {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .primary-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-lg);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .secondary-button {
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--primary-color);
+        }
+
+        .secondary-button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-mockup {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-xl);
+            padding: 2rem;
+            transform: perspective(1000px) rotateY(-10deg);
+            transition: transform 0.3s;
+        }
+
+        .hero-mockup:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        /* --- Features 섹션 --- */
+        .features {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.75rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-light);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-lighter);
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-lightest), var(--primary-lighter));
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-normal);
+            line-height: 1.7;
+        }
+
+        /* --- How it Works 섹션 --- */
+        .how-it-works {
+            padding: 6rem 0;
+            background: var(--bg-light);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -1.5rem;
+            width: 3rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary-lighter));
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-description {
+            color: var(--text-normal);
+        }
+
+        /* --- CTA 섹션 --- */
+        .cta-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .cta-button-white {
+            background: white;
+            color: var(--primary-color);
+            padding: 1.25rem 3rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-lg);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .cta-button-white:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-lighter);
+            line-height: 1.7;
+        }
+
+        .footer-section h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--text-lighter);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-light);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-lighter);
+        }
+
+        /* --- Mobile Menu --- */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.75rem;
+            }
+
+            .hero-visual {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .step:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: var(--shadow-lg);
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .nav-menu.active {
+                transform: translateX(0);
+            }
+
+            .hero {
+                padding-top: 6rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        /* --- 애니메이션 --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(14, 165, 233, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    OneTrip
+                </div>
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#features" class="nav-link">주요 기능</a>
+                    <a href="#how-it-works" class="nav-link">사용 방법</a>
+                    <a href="#contact" class="nav-link">문의하기</a>
+                    <a href="#" class="cta-button">무료로 시작하기</a>
+                </nav>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text animate-fadeInUp">
+                    <h1>
+                        흩어진 여행 정보를<br>
+                        <span class="highlight">하나의 완벽한 계획</span>으로
+                    </h1>
+                    <p class="subtitle">
+                        항공권, 호텔 예약, 가고 싶은 곳까지<br>
+                        AI가 모든 정보를 분석해 최적의 여행 일정을 만들어드립니다.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#" class="primary-button pulse">
+                            무료로 여행 계획 만들기
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#how-it-works" class="secondary-button">사용 방법 보기</a>
+                    </div>
+                </div>
+                <div class="hero-visual animate-fadeInUp">
+                    <div class="hero-mockup">
+                        <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 1rem; margin-bottom: 1rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-dark); margin-bottom: 1rem;">✈️ 파리 3박 4일 여행</h3>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <span style="background: var(--primary-lightest); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600;">8월 15일 - 18일</span>
+                                <span style="background: var(--primary-lightest); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600;">2명</span>
+                            </div>
+                        </div>
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="background: white; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                                <p style="font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Day 1: 파리 도착</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light);">15:00 호텔 체크인 → 17:00 에펠탑 → 19:30 센강 크루즈</p>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                                <p style="font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Day 2: 루브르 & 몽마르트</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light);">09:30 루브르 박물관 → 14:00 샹젤리제 → 18:00 몽마르트</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">OneTrip이 특별한 이유</h2>
+                <p class="section-subtitle">
+                    복잡한 여행 계획, 이제는 AI가 대신 고민해드립니다
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">AI 자동 분석</h3>
+                    <p class="feature-description">
+                        이메일, 메모, 스크린샷 등 어떤 형태의 정보든 AI가 자동으로 분석하여 날짜, 장소, 시간을 정확히 추출합니다.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3 class="feature-title">최적 동선 설계</h3>
+                    <p class="feature-description">
+                        이동 거리와 시간을 고려한 효율적인 동선으로 시간을 절약하고 더 많은 곳을 편안하게 둘러보실 수 있습니다.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">실시간 업데이트</h3>
+                    <p class="feature-description">
+                        여행 중 계획이 변경되어도 걱정 없어요. 실시간으로 일정을 수정하고 새로운 추천을 받을 수 있습니다.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3 class="feature-title">맞춤형 추천</h3>
+                    <p class="feature-description">
+                        현재 위치와 일정에 맞춰 인근 맛집, 숨은 명소, 현지인 추천 장소를 실시간으로 제안해드립니다.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3 class="feature-title">함께 계획하기</h3>
+                    <p class="feature-description">
+                        친구나 가족과 여행 계획을 실시간으로 공유하고 함께 수정할 수 있어 모두가 만족하는 여행을 만들 수 있습니다.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">예산 관리</h3>
+                    <p class="feature-description">
+                        여행 경비를 자동으로 계산하고 카테고리별로 정리해 예산 내에서 알찬 여행을 계획할 수 있습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">간단한 3단계로 완성되는 여행</h2>
+                <p class="section-subtitle">
+                    복잡한 과정 없이 누구나 쉽게 사용할 수 있습니다
+                </p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">정보 입력</h3>
+                    <p class="step-description">
+                        항공권, 호텔 예약 내역, 가고 싶은 곳을 텍스트나 사진으로 자유롭게 입력하세요
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">AI 분석</h3>
+                    <p class="step-description">
+                        AI가 모든 정보를 분석하여 최적의 동선과 시간대를 고려한 일정을 자동으로 생성합니다
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">계획 완성</h3>
+                    <p class="step-description">
+                        생성된 일정을 확인하고 필요에 따라 수정하여 나만의 완벽한 여행 계획을 완성하세요
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>지금 바로 첫 여행을 계획해보세요</h2>
+                <p>회원가입 없이 무료로 시작할 수 있습니다</p>
+                <a href="#" class="cta-button-white">
+                    무료로 시작하기
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>OneTrip</h3>
+                    <p>
+                        모든 여행을 하나로, 완벽하게<br>
+                        AI 기반 스마트 여행 계획 서비스
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4>제품</h4>
+                    <ul>
+                        <li><a href="#">주요 기능</a></li>
+                        <li><a href="#">업데이트</a></li>
+                        <li><a href="#">로드맵</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <ul>
+                        <li><a href="#">도움말</a></li>
+                        <li><a href="#">문의하기</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">가이드</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>회사</h4>
+                    <ul>
+                        <li><a href="#">소개</a></li>
+                        <li><a href="#">블로그</a></li>
+                        <li><a href="#">채용</a></li>
+                        <li><a href="#">제휴문의</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OneTrip Inc. All rights reserved. | <a href="#" style="color: var(--text-lighter);">개인정보처리방침</a> | <a href="#" style="color: var(--text-lighter);">이용약관</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenuToggle.textContent = navMenu.classList.contains('active') ? '✕' : '☰';
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    navMenu.classList.remove('active');
+                    mobileMenuToggle.textContent = '☰';
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all feature cards and steps
+        document.querySelectorAll('.feature-card, .step').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
