@@ -52,8 +52,9 @@ alwaysApply: true
 - **Supabase**: BaaS (Backend as a Service) 통합 솔루션
 
 ### API 및 통합
-- **SerpAPI**: 실시간 검색 데이터 (항공권, 호텔, 식당)
+- **GoogleAPI/NaverAPI**: 실시간 검색 데이터 (항공권, 호텔, 식당)
 - **Google Maps API**: 지도 및 위치 서비스
+- **Weather API**: 날씨 데이터 통합 분석
 - **OpenAI API**: GPT-4o 모델 접근
 
 ### 파일 처리
@@ -102,10 +103,12 @@ alwaysApply: true
 - **Output Parsers**: 구조화된 데이터 추출
 
 ### Agent 도구 (Tools)
-- **SerpAPI Tool**: 실시간 검색 통합
+- **GoogleAPI/NaverAPI Tool**: 실시간 검색 통합
 - **Maps Tool**: 지도 및 경로 계산
+- **Weather Tool**: 날씨 데이터 분석 및 추천
 - **Calendar Tool**: 일정 생성 및 관리
 - **PDF Generator Tool**: 여행 계획서 생성
+- **Context Recommendation Tool**: 컨텍스트 기반 맛집/볼거리 추천
 
 ### 워크플로우 관리
 - **StateGraph**: 복잡한 다단계 여행 계획 프로세스
@@ -122,3 +125,24 @@ alwaysApply: true
 - **Queue System**: Celery + Redis 기반 작업 큐
 - **Load Balancing**: 다중 Agent 인스턴스 관리
 - **Auto Scaling**: 트래픽 기반 자동 확장
+
+## 💰 기술스택 선택 옵션
+
+### 1안: 저비용 스타트업 최적화
+- **장점**: 초기 비용 최소화, 빠른 MVP 출시
+- **Frontend**: Next.js + Vercel (무료 티어 활용)
+- **Backend**: FastAPI + Supabase (무료 티어)
+- **AI**: OpenAI API (토큰 기반 최적화)
+- **검색**: NaverAPI (국내 서비스 중심)
+- **지도**: Google Maps API (기본 할당량 활용)
+- **총 예상 비용**: 월 $200 이하
+
+### 2안: 성능 최적화 기술스택
+- **장점**: 최고 성능, 확장성, 고급 기능
+- **Frontend**: Next.js + Vercel Pro
+- **Backend**: FastAPI + AWS RDS + ElastiCache
+- **AI**: OpenAI API + Anthropic Claude (이중화)
+- **검색**: GoogleAPI + NaverAPI (병렬 활용)
+- **지도**: Mapbox + Google Maps (하이브리드)
+- **인프라**: AWS/GCP 멀티 클라우드
+- **총 예상 비용**: 월 $1,000~$2,000
