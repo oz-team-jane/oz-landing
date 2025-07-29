@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneTrip - 메인 화면 와이어프레임</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8fafc;
+            padding: 20px;
+        }
+        
+        .wireframe-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1a202c;
+            margin-bottom: 10px;
+        }
+        
+        .header .tagline {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+        
+        .header .description {
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        /* Travel Style Selection */
+        .style-section {
+            background-color: #ffffff;
+            padding: 30px 50px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .style-section h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        
+        .style-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .style-btn {
+            flex: 1;
+            min-width: 180px;
+            height: 80px;
+            border-radius: 8px;
+            border: 2px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .style-btn.selected {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #285e61;
+        }
+        
+        .style-btn:not(.selected) {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+            color: #4a5568;
+        }
+        
+        .style-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .style-btn .title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .style-btn .subtitle {
+            font-size: 11px;
+        }
+        
+        /* Input Section */
+        .input-section {
+            background-color: #ffffff;
+            padding: 30px 50px 50px;
+        }
+        
+        .input-section h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        
+        .input-box {
+            width: 100%;
+            height: 140px;
+            background-color: #f7fafc;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 12px;
+            color: #a0aec0;
+            resize: none;
+            margin-bottom: 30px;
+        }
+        
+        .ai-button {
+            display: block;
+            width: 360px;
+            height: 50px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .ai-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.3);
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .style-buttons {
+                flex-direction: column;
+            }
+            
+            .style-btn {
+                min-width: 100%;
+            }
+            
+            .wireframe-container {
+                margin: 10px;
+            }
+            
+            .style-section, .input-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wireframe-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>✈️ OneTrip</h1>
+            <div class="tagline">흩어진 여행 정보를 하나로</div>
+            <div class="description">AI가 분석하여 최적화된 여행 계획을 자동 생성합니다</div>
+        </div>
+        
+        <!-- Travel Style Selection -->
+        <div class="style-section">
+            <h2>여행 스타일 선택</h2>
+            <div class="style-buttons">
+                <div class="style-btn selected">
+                    <div class="title">💰 경제적</div>
+                    <div class="subtitle">저예산 최적화</div>
+                </div>
+                <div class="style-btn">
+                    <div class="title">✨ 럭셔리</div>
+                    <div class="subtitle">프리미엄 중심</div>
+                </div>
+                <div class="style-btn">
+                    <div class="title">👨‍👩‍👧‍👦 가족</div>
+                    <div class="subtitle">안전성 편의성</div>
+                </div>
+                <div class="style-btn">
+                    <div class="title">🏔️ 모험</div>
+                    <div class="subtitle">액티비티 중심</div>
+                </div>
+                <div class="style-btn">
+                    <div class="title">🏛️ 문화</div>
+                    <div class="subtitle">역사 문화 유적</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input Section -->
+        <div class="input-section">
+            <h2>여행 정보 입력</h2>
+            <textarea class="input-box" placeholder="예시:
+3월 15일 오전 ~ 3월 18일 저녁 일본 여행
+호텔: 시부야 근처, 항공: 김포-하네다
+관심사: 맛집, 쇼핑, 온천
+
+또는 예약 내역을 복사해서 붙여넣어도 됩니다!
+- 호텔 예약 확인서
+- 항공권 정보  
+- 렌터카 예약
+- 레스토랑 예약 등"></textarea>
+            
+            <button class="ai-button">🎯 AI 분석 시작하기</button>
+            
+            <div class="footer-note">
+                💡 어떤 형태의 정보든 상관없습니다. AI가 알아서 분석해드려요!
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Style button interaction
+        document.querySelectorAll('.style-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // AI button click effect
+        document.querySelector('.ai-button').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+                alert('AI 분석을 시작합니다! (와이어프레임 데모)');
+            }, 150);
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,123 @@
+# OneTrip AI 여행 계획 자동화 서비스 - Cursor Rules
+
+## 🎯 프로젝트 개요
+- **서비스명**: OneTrip (원트립)
+- **목적**: AI 기반 여행 계획 자동화 웹 서비스
+- **핵심 기능**: 흩어진 여행 정보를 AI가 분석하여 최적화된 여행 계획 자동 생성
+
+## 📱 UX 와이어프레임
+
+### 메인 화면 (Landing Page)
+![메인 화면](/docs/wireframe-main.html)
+
+### 결과 화면 (여행 계획 생성)
+![결과 화면](/docs/wireframe-result.html)
+
+### 모호함 해결 다이얼로그
+![모호함 해결](/docs/wireframe-ambiguity.html)
+
+## 🛠️ 기술 스택
+
+### 프론트엔드
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript 5.6+
+- **Styling**: Tailwind CSS 4.0 + Shadcn/ui
+- **State**: Zustand + TanStack Query v5
+- **Maps**: Mapbox GL JS + @vis.gl/react-google-maps
+- **Deploy**: Vercel
+
+### 백엔드
+- **Framework**: FastAPI 0.110+
+- **Language**: Python 3.12
+- **Database**: PostgreSQL 16 + Redis 7
+- **BaaS**: Supabase
+- **Auth**: JWT + OAuth2
+- **Deploy**: Railway/Fly.io
+
+### AI Agent
+- **Framework**: LangGraph + LangChain
+- **Models**: GPT-4o + GPT-4o-mini
+- **NLP**: spaCy + NLTK + python-dateutil
+- **Memory**: LangGraph Local + Persistent Memory
+- **Tools**: Custom 도구들 (Maps, Weather, Search 등)
+
+### 외부 API
+- **AI**: OpenAI API
+- **Maps**: Google Maps API
+- **Search**: GoogleAPI + NaverAPI
+- **Weather**: Weather API
+
+## 📝 개발 가이드라인
+
+### UX 설계 원칙
+- **미니멀 디자인**: 복잡한 메뉴나 설정 최소화
+- **원클릭 중심**: 최소한의 클릭으로 목표 달성
+- **실시간 피드백**: 사용자 액션에 즉시 반응
+- **3-패널 레이아웃**: 타임라인 + 지도 + 추천 리스트
+
+### 코드 스타일
+- TypeScript Strict Mode 사용
+- ESLint + Prettier 준수
+- 컴포넌트는 함수형으로 작성
+- Custom Hook으로 로직 분리
+- Pydantic 모델로 데이터 검증
+
+### 폴더 구조
+```
+frontend/
+├── app/                 # Next.js App Router
+├── components/          # 재사용 컴포넌트
+├── hooks/              # Custom Hooks
+├── lib/                # 유틸리티 함수
+├── stores/             # Zustand 스토어
+└── types/              # TypeScript 타입
+
+backend/
+├── app/
+│   ├── routers/        # FastAPI 라우터
+│   ├── services/       # 비즈니스 로직
+│   ├── models/         # Pydantic 모델
+│   ├── utils/          # 유틸리티
+│   └── agents/         # LangGraph Agent
+├── tests/              # 테스트 코드
+└── requirements.txt    # Python 의존성
+
+docs/
+├── UX_와이어프레임.md  # UX 설계 문서
+├── wireframe-main.svg   # 메인 화면 와이어프레임
+├── wireframe-result.svg # 결과 화면 와이어프레임
+└── wireframe-ambiguity.svg # 모호함 해결 다이얼로그
+```
+
+### 개발 우선순위
+1. **MVP 기능**: 기본 텍스트 입력 → AI 분석 → 여행 계획 생성
+2. **3-패널 결과 화면**: 타임라인 뷰 + 지도 + 추천 리스트
+3. **실시간 기능**: 추천 리스트 클릭으로 일정 수정
+4. **모호함 해결**: 대화형 정보 수집 다이얼로그
+5. **고급 기능**: 파일 처리, 협업, 공유 기능
+
+### 주요 컴포넌트 설계
+
+#### 메인 화면
+- TravelStyleSelector: 5가지 여행 스타일 선택
+- TravelInputForm: 대형 텍스트 입력 영역
+- AIAnalysisButton: 분석 시작 버튼
+
+#### 결과 화면
+- TimelineView: 좌측 일정 타임라인
+- MapView: 중앙 지도 및 경로 표시
+- RecommendationPanel: 우측 추천 리스트
+- QuickAddButton: 원클릭 일정 추가/제거
+
+#### 공통 컴포넌트
+- AmbiguityDialog: 모호함 해결 모달
+- ShareButtons: 공유/PDF/수정 버튼
+- LoadingSpinner: AI 분석 중 로딩
+
+### 성능 최적화
+- Next.js App Router로 서버 사이드 렌더링
+- TanStack Query로 API 캐싱
+- Redis로 백엔드 캐싱
+- 이미지 최적화 및 CDN 활용
+- LangGraph 워크플로우 비동기 처리
+- 지도 및 추천 데이터 지연 로딩 

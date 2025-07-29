@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneTrip - 모호함 해결 다이얼로그 와이어프레임</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8fafc;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Background overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        /* Dialog container */
+        .dialog {
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Dialog header */
+        .dialog-header {
+            background: linear-gradient(135deg, #fef5e7, #fed7aa);
+            border-bottom: 1px solid #ed8936;
+            border-radius: 10px 10px 0 0;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .dialog-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #c05621;
+            margin-bottom: 5px;
+        }
+        
+        .dialog-subtitle {
+            font-size: 12px;
+            color: #dd6b20;
+        }
+        
+        /* Dialog content */
+        .dialog-content {
+            padding: 25px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+        }
+        
+        .question-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        
+        .question-desc {
+            font-size: 11px;
+            color: #4a5568;
+            margin-bottom: 12px;
+        }
+        
+        .options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .option-btn {
+            padding: 8px 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            background-color: #f7fafc;
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 10px;
+            transition: all 0.2s;
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .option-btn:hover {
+            border-color: #38b2ac;
+            background-color: #e6fffa;
+            color: #285e61;
+            transform: translateY(-1px);
+        }
+        
+        .option-btn.selected {
+            border-color: #38b2ac;
+            background-color: #e6fffa;
+            color: #285e61;
+            border-width: 2px;
+            font-weight: bold;
+        }
+        
+        /* Budget options */
+        .budget-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+        }
+        
+        .budget-options .option-btn {
+            font-size: 9px;
+            padding: 6px 12px;
+        }
+        
+        /* Action buttons */
+        .dialog-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid;
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border-color: #3182ce;
+            color: white;
+        }
+        
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+        
+        .action-btn.secondary {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+            color: #4a5568;
+        }
+        
+        .action-btn.secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+        
+        /* Skip option */
+        .skip-option {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 10px;
+            color: #a0aec0;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        
+        .skip-option:hover {
+            color: #718096;
+        }
+        
+        /* Demo background */
+        .demo-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: -1;
+        }
+        
+        .demo-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0.3;
+            text-align: center;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .dialog {
+                width: 95%;
+                margin: 20px;
+            }
+            
+            .options {
+                flex-direction: column;
+            }
+            
+            .budget-options {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .dialog-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo background -->
+    <div class="demo-background">
+        <div class="demo-text">
+            OneTrip 메인 화면<br>
+            (배경 화면)
+        </div>
+    </div>
+    
+    <!-- Dialog overlay -->
+    <div class="overlay">
+        <div class="dialog">
+            <!-- Header -->
+            <div class="dialog-header">
+                <div class="dialog-title">🤔 추가 정보가 필요해요</div>
+                <div class="dialog-subtitle">더 정확한 계획을 위해 몇 가지 확인이 필요합니다</div>
+            </div>
+            
+            <!-- Content -->
+            <div class="dialog-content">
+                <!-- Question 1: Date -->
+                <div class="question">
+                    <div class="question-title">1. 여행 날짜를 명확히 해주세요:</div>
+                    <div class="question-desc">"3월 중순"으로 입력하셨는데, 정확한 날짜는?</div>
+                    <div class="options">
+                        <div class="option-btn selected">3월 15-18일</div>
+                        <div class="option-btn">3월 20-23일</div>
+                        <div class="option-btn">직접 입력</div>
+                    </div>
+                </div>
+                
+                <!-- Question 2: Budget -->
+                <div class="question">
+                    <div class="question-title">2. 예산 범위는 어느 정도인가요?</div>
+                    <div class="budget-options">
+                        <div class="option-btn">50만원 이하</div>
+                        <div class="option-btn selected">50-100만원</div>
+                        <div class="option-btn">100만원 이상</div>
+                        <div class="option-btn">상관없음</div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="dialog-actions">
+                    <button class="action-btn primary">확인</button>
+                    <button class="action-btn secondary">나중에</button>
+                </div>
+                
+                <!-- Skip option -->
+                <div class="skip-option">현재 정보로 일단 계획 생성하기</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Option selection
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove selected from siblings only
+                const parent = this.parentElement;
+                parent.querySelectorAll('.option-btn').forEach(sibling => {
+                    sibling.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // Action buttons
+        document.querySelector('.action-btn.primary').addEventListener('click', function() {
+            // Get selected options
+            const dateOption = document.querySelector('.options .option-btn.selected').textContent;
+            const budgetOption = document.querySelector('.budget-options .option-btn.selected').textContent;
+            
+            alert(`선택된 옵션:\n날짜: ${dateOption}\n예산: ${budgetOption}\n\n여행 계획을 생성합니다! (와이어프레임 데모)`);
+            
+            // Close dialog animation
+            const dialog = document.querySelector('.dialog');
+            dialog.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => {
+                document.querySelector('.overlay').style.display = 'none';
+            }, 300);
+        });
+        
+        document.querySelector('.action-btn.secondary').addEventListener('click', function() {
+            alert('나중에 설정하겠습니다. (와이어프레임 데모)');
+            document.querySelector('.overlay').style.display = 'none';
+        });
+        
+        // Skip option
+        document.querySelector('.skip-option').addEventListener('click', function() {
+            alert('현재 정보로 여행 계획을 생성합니다! (와이어프레임 데모)');
+            document.querySelector('.overlay').style.display = 'none';
+        });
+        
+        // Close on overlay click
+        document.querySelector('.overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+        
+        // Add slideOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(-20px) scale(0.95);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> 
